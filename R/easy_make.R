@@ -1,18 +1,19 @@
 #' easy_make
 #' @description Produce a makefile based on
 #'
-#' @param dependencies
-#' A dataframe containing the edge list of dependencies
-#' between files. The dataframe should have two fields "file" and "pre_req"
-#' showing the file and its immediate pre-requisite respectively. If a file
-#' has multiple #' pre-requisites, list each dependency as a separate line
-#' in the dataframe.
-#' @param render_markdown
-#' If TRUE, the Makefile will render any Markdown files, if FALSE markdown
-#' files will be ignored.
-#' @param path
-#' Destination path of the Makefile.
-#' @param prevent_cycles Set to TRUE if you want cycles to be prevented
+#' @param dependencies A dataframe containing the edge list of
+#'     dependencies between files. The dataframe should have two
+#'     fields "file" and "pre_req" showing the file and its immediate
+#'     pre-requisite respectively. If a file has multiple #'
+#'     pre-requisites, list each dependency as a separate line in the
+#'     dataframe.
+#' @param render_markdown If TRUE, the Makefile will render any
+#'     Markdown files, if FALSE markdown files will be ignored.
+#' @param path Destination path of the Makefile.
+#' @param prevent_cycles Set to TRUE if you want cycles to be
+#'     prevented
+#' @param silence_command If TRUE, all rules will be prefixed with
+#'     "@". This prevents echoing the rule. Default is FALSE.
 #'
 #' @return
 #' A Makefile
@@ -30,6 +31,7 @@
 easy_make <- function(dependencies = detect_dependencies(),
                       render_markdown = TRUE,
                       prevent_cycles = TRUE,
+                      silence_command = FALSE,
                       path = "Makefile"){
 
     g <- igraph::graph.data.frame(dependencies)
@@ -60,6 +62,10 @@ easy_make <- function(dependencies = detect_dependencies(),
     dependencies <- dplyr::left_join(all_dependencies, r_dependencies, by = "file")
     make <- rep("", length.out = length(dependencies$file))
 
+    ## if true, include an "@" before the command to prevent the
+    ## echoing of the command itself
+    silence.bit <- ifelse(silence_command, "@", "")
+
     for (i in seq_along(dependencies$file)) {
         ## If pre-req is R, run the script
         ## If pre-req is RMD, render it
@@ -68,26 +74,26 @@ easy_make <- function(dependencies = detect_dependencies(),
         if (dependencies$file_type[i] %in% c("R", "r") &
             !(dependencies$pre_req_type[i] %in% c("R", "r"))) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\t--touch ", dependencies$file[i],
+                              "\n\t", silence.bit, "--touch ", dependencies$file[i],
                               "\n")
         } else if ( !(dependencies$file_type[i] %in% c("R", "r")) &
                     dependencies$pre_req_type[i] %in% c("R", "r")) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\tRscript ", dependencies$pre_req[i],
+                              "\n\t", silence.bit, "Rscript ", dependencies$pre_req[i],
                               "\n")
         } else if (dependencies$file_type[i] %in% c("R", "r") & dependencies$pre_req_type[i] %in% c("R", "r")) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\t--touch ", dependencies$R_pre_req[i],
-                              "\n\t--touch ", dependencies$file[i],
+                              "\n\t", silence.bit, "--touch ", dependencies$R_pre_req[i],
+                              "\n\t", silence.bit, "--touch ", dependencies$file[i],
                               "\n\n")
         } else if (dependencies$file_type[i] %in% c("Rmd", "rmd", "RMD") & render_markdown) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\tRscript -e 'rmarkdown::render(\"",
+                              "\n\t", silence.bit, "Rscript -e 'rmarkdown::render(\"",
                               dependencies$file[i], "\")'",
                               "\n")
         } else if (dependencies$pre_req_type[i] %in% c("Rmd", "rmd") & render_markdown) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\tRscript -e 'rmarkdown::render(\"",
+                              "\n\t", silence.bit, "Rscript -e 'rmarkdown::render(\"",
                               dependencies$pre_req[i], "\")'",
                               "\n")
         }	else {

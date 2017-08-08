@@ -19,4 +19,3 @@ A dataframe showing the functions, their filename
 Reads a file, and detects any filename arguments passed
 to any of the listed functions.
 }
-

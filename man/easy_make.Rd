@@ -5,19 +5,24 @@
 \title{easy_make}
 \usage{
 easy_make(dependencies = detect_dependencies(), render_markdown = TRUE,
-  prevent_cycles = TRUE, path = "Makefile")
+  prevent_cycles = TRUE, silence_command = FALSE, path = "Makefile")
 }
 \arguments{
-\item{dependencies}{A dataframe containing the edge list of dependencies
-between files. The dataframe should have two fields "file" and "pre_req"
-showing the file and its immediate pre-requisite respectively. If a file
-has multiple #' pre-requisites, list each dependency as a separate line
-in the dataframe.}
+\item{dependencies}{A dataframe containing the edge list of
+dependencies between files. The dataframe should have two
+fields "file" and "pre_req" showing the file and its immediate
+pre-requisite respectively. If a file has multiple #'
+pre-requisites, list each dependency as a separate line in the
+dataframe.}
 
-\item{render_markdown}{If TRUE, the Makefile will render any Markdown files, if FALSE markdown
-files will be ignored.}
+\item{render_markdown}{If TRUE, the Makefile will render any
+Markdown files, if FALSE markdown files will be ignored.}
 
-\item{prevent_cycles}{Set to TRUE if you want cycles to be prevented}
+\item{prevent_cycles}{Set to TRUE if you want cycles to be
+prevented}
+
+\item{silence_command}{If TRUE, all rules will be prefixed with
+"@". This prevents echoing the rule. Default is FALSE.}
 
 \item{path}{Destination path of the Makefile.}
 }
@@ -35,4 +40,3 @@ easy_make(detect_dependencies(system.file("test_project",
 
 unlink(paste0("test_dir/", "Makefile_test"))
 }
-

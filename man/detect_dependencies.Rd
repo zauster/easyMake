@@ -7,7 +7,7 @@
 detect_dependencies(path = getwd(), import_functions = c("fread", "import",
   "load", "read_delim", "read_file", "read_fw", "read_lines", "read_log",
   "read_table", "read.csv", "read.dta", "read.systat", "read.table",
-  "read.xlsx", "readRDS", "sasxport.get", "spss.get"),
+  "read.xlsx", "read_excel", "readRDS", "sasxport.get", "spss.get"),
   export_functions = c("export", "fwrite", "save", "saveRDS", "write_csv",
   "write.csv", "write.csv2", "write.dcf", "write.dta", "write.foreign",
   "write.ftable", "write.table", "write.tsv", "write.xlsx"),
@@ -48,4 +48,3 @@ script, and the R script is the pre-requiste for all exported files.
 detect_dependencies(system.file('test_project', package = 'easyMake'))
 
 }
-
