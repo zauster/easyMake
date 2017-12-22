@@ -3,3 +3,7 @@
 ^.*\.o$
 ^README\.md$       # An Rmarkdown file used to generate README.md
 ^.\images\*$
+^README.rmd
+^README_files
+^data_raw
+^images

@@ -42,8 +42,8 @@ easy_make <- function(dependencies = detect_dependencies(),
     dependencies$file_type    <- tools::file_ext(dependencies$file)
     dependencies$pre_req_type <- tools::file_ext(dependencies$pre_req)
 
-    all_targets <- dependencies$file[!(dependencies$file %in%
-                                       dependencies$pre_req)]
+    all_targets <- unique(dependencies$file[!(dependencies$file %in%
+                                              dependencies$pre_req)])
     all_dependencies <- dependencies %>%
         group_by(file) %>%
         summarise(pre_req = paste(pre_req, collapse = " "),
@@ -74,29 +74,30 @@ easy_make <- function(dependencies = detect_dependencies(),
         if (dependencies$file_type[i] %in% c("R", "r") &
             !(dependencies$pre_req_type[i] %in% c("R", "r"))) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\t", silence.bit, "--touch ", dependencies$file[i],
-                              "\n")
+                              "\n\t", silence.bit, "--touch ", dependencies$file[i], "\n")
+
         } else if ( !(dependencies$file_type[i] %in% c("R", "r")) &
                     dependencies$pre_req_type[i] %in% c("R", "r")) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
-                              "\n\t", silence.bit, "Rscript ", dependencies$pre_req[i],
-                              "\n")
-        } else if (dependencies$file_type[i] %in% c("R", "r") & dependencies$pre_req_type[i] %in% c("R", "r")) {
+                              "\n\t", silence.bit, "Rscript ", dependencies$pre_req[i], "\n")
+
+        } else if (dependencies$file_type[i] %in% c("R", "r") &
+                   dependencies$pre_req_type[i] %in% c("R", "r")) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
                               "\n\t", silence.bit, "--touch ", dependencies$R_pre_req[i],
-                              "\n\t", silence.bit, "--touch ", dependencies$file[i],
-                              "\n\n")
+                              "\n\t", silence.bit, "--touch ", dependencies$file[i], "\n")
+
         } else if (dependencies$file_type[i] %in% c("Rmd", "rmd", "RMD") & render_markdown) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
                               "\n\t", silence.bit, "Rscript -e 'rmarkdown::render(\"",
-                              dependencies$file[i], "\")'",
-                              "\n")
+                              dependencies$file[i], "\")'", "\n")
+
         } else if (dependencies$pre_req_type[i] %in% c("Rmd", "rmd") & render_markdown) {
             make[i] <- paste0(dependencies$file[i], ": ", dependencies$pre_req[i],
                               "\n\t", silence.bit, "Rscript -e 'rmarkdown::render(\"",
-                              dependencies$pre_req[i], "\")'",
-                              "\n")
-        }	else {
+                              dependencies$pre_req[i], "\")'", "\n")
+
+        } else {
             next
         }
     }

@@ -3,7 +3,7 @@
 export(detect_dependencies)
 export(detect_file)
 export(easy_make)
-export(graph_dependencies)
+import(data.table)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,bind_rows)
 importFrom(dplyr,data_frame)
