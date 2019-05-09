@@ -6,23 +6,23 @@
 #' @param function_list The list of functions to search within.
 #' @return A dataframe showing the functions, their filename
 #'     arguments, adn the searched file.
-#' 
+#'
 #' @export
 #' @importFrom dplyr group_by summarise filter left_join %>% select data_frame select bind_rows
 #' @importFrom stringr str_replace_all str_extract str_extract_all
 detect_file <- function(this.file, function_list) {
- 
+
     function_list <- unique(function_list)
 
     ## read the file
     if (tools::file_ext(this.file) %in% c("Rmd", "rmd")) {
         text <- parse(knitr::purl(this.file, output = tempfile(),
-                                  documentation = 0)) %>% 
+                                  documentation = 0)) %>%
             as.character() %>% paste0(collapse = "\n")
     } else {
         text <- this.file %>% readLines(warn = FALSE) %>%
             # delete lines starting with "#"
-            str_replace_all("^ *#+.*", "") %>% 
+            str_replace_all("^ *#+.*", "") %>%
         paste0(collapse = "\n")
     }
 
@@ -36,7 +36,7 @@ detect_file <- function(this.file, function_list) {
             unlist %>%            # needed if there are multiple matches in ( ... )
             ## str_extract("(\".*?\\.*?\")") %>%
             str_replace_all(pattern = "\\\"", "")
-        
+
         ## keep only strings with an "." in between
         ## so that we only keep filenames and
         ## drop all character options

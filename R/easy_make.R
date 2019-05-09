@@ -18,7 +18,7 @@
 #' @return
 #' A Makefile
 #' @export
-#' @importFrom dplyr group_by summarise filter left_join %>% select data_frame select
+#' @importFrom dplyr group_by summarise filter left_join %>% select data_frame select n
 #' @importFrom tools file_ext
 #'
 #' @examples
