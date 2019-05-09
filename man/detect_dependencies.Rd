@@ -4,14 +4,14 @@
 \alias{detect_dependencies}
 \title{Detect Dependencies}
 \usage{
-detect_dependencies(path = getwd(), import_functions = c("fread", "import",
-  "load", "read_delim", "read_file", "read_fw", "read_lines", "read_log",
-  "read_table", "read.csv", "read.dta", "read.systat", "read.table",
-  "read.xlsx", "read_excel", "readRDS", "sasxport.get", "spss.get"),
-  export_functions = c("export", "fwrite", "save", "saveRDS", "write_csv",
-  "write.csv", "write.csv2", "write.dcf", "write.dta", "write.foreign",
-  "write.ftable", "write.table", "write.tsv", "write.xlsx"),
-  source_detect = TRUE, detect_cycle = TRUE)
+detect_dependencies(path = getwd(), import_functions = c("fread",
+  "import", "load", "read_delim", "read_file", "read_fw", "read_lines",
+  "read_log", "read_table", "read.csv", "read.dta", "read.systat",
+  "read.table", "read.xlsx", "read_excel", "readRDS", "sasxport.get",
+  "spss.get"), export_functions = c("export", "fwrite", "save",
+  "saveRDS", "write_csv", "write.csv", "write.csv2", "write.dcf",
+  "write.dta", "write.foreign", "write.ftable", "write.table", "write.tsv",
+  "write.xlsx"), source_detect = TRUE, detect_cycle = TRUE)
 }
 \arguments{
 \item{path}{A string listing the filepath to search, defaults to
