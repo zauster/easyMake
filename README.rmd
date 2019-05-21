@@ -1,7 +1,10 @@
 ---
-title: "Easy Make"
+title: "easyMake"
 output: github_document
 ---
+
+This package is a fork from the
+[unmaintained](https://github.com/GShotwell/easyMake) package.
 
 easyMake is a proof of concept for a simple way to generate
 Makefiles based on an R dataframe listing file dependencies. It
@@ -46,7 +49,7 @@ edge list based on those relationships. The output of this
 function looks like this:
 
 ```{r}
-#Create edge list mannually
+# Create edge list mannually
 dependencies <- data_frame(
  file = c("analysis/file2.R", "analysis/markdown.Rmd", "mtcars.csv",
  						"mtcars.RData", "analysis/file2.R"),
@@ -87,7 +90,6 @@ product the following Makefile:
 
 ```
 all: analysis/markdown.Rmd
-.DELETE_ON_ERROR: 
 analysis/file2.R: mtcars.csv R/hello.R
 	--touch analysis/file2.R
  
@@ -129,4 +131,3 @@ sample graph might look like this:
 ```{r}
 easyMake::graph_dependencies(dependencies)
 ```
-
